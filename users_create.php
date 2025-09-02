@@ -3,7 +3,7 @@ require __DIR__ . '/protect.php';
 require __DIR__ . '/config/db.php';
 require __DIR__ . '/helpers.php';
 ensure_admin();
-
+//Variavel de array vazio para receber futuros erros
 $errors = [];
 $first_name = $last_name = $email = $role = '';
 
@@ -28,8 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       flash_set('success', 'Usuário criado com sucesso.');
       header('Location: admin.php');
       exit;
+      //O catch aqui vai verificar se deu algum erro ao salvar
     } catch (PDOException $e) {
-      if ($e->getCode() === '23000') { // duplicate
+      if ($e->getCode() === '23000') { // Se já existe um e-mail cadastrado
         $errors[] = 'Já existe um usuário com este e-mail.';
       } else {
         $errors[] = 'Erro ao salvar: ' . $e->getMessage();
