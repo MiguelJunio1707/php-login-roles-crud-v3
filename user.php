@@ -17,6 +17,6 @@ include __DIR__ . '/partials/header.php';
   <strong>Bem-vindo(a)!</strong> Você está logado como <u><?php echo htmlspecialchars($_SESSION['first_name'] . ' ' . $_SESSION['last_name']); ?></u>.
 </div>
 
-<p>Este é um exemplo simples para aulas. No canto superior (navbar) aparece seu nome e o botão de sair.</p>
+<p>Este é um exemplo simples. No canto superior (navbar) aparece o nome do usuário que está logado e o botão de sair.</p>
 
 <?php include __DIR__ . '/partials/footer.php'; ?>

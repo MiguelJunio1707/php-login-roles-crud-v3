@@ -4,7 +4,7 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// THEME: load from localStorage and toggle
+// O tema é armazenado em localStorage
 (function() {
   const applyTheme = (t) => document.documentElement.setAttribute('data-bs-theme', t);
   const saved = localStorage.getItem('theme');
@@ -23,7 +23,7 @@
   });
 })();
 
-// TOASTS: simple API + integration with PHP flash
+// Essa função esta relacionada no helpers.php
 function showToast(message, type) {
   var toastArea = document.getElementById('toastArea');
   if (!toastArea) return;
@@ -42,7 +42,8 @@ function showToast(message, type) {
   t.show();
 }
 
-// If server rendered a flash-toasts script, execute it
+// Se o script renderizar ai aparece um toast
+//Link do que é toast no bootstrap https://getbootstrap.com/docs/5.3/components/toasts/
 document.addEventListener('DOMContentLoaded', function() {
   var script = document.getElementById('flashToastsScript');
   if (script && script.textContent) {

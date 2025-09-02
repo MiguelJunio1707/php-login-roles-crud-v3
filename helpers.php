@@ -3,14 +3,14 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
+//Se o usuário estiver logado com um perfil de admin
 function ensure_admin() {
     if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
         header('Location: index.php?error=Acesso negado.');
         exit;
     }
 }
-
+//Essa aqui é uma função que cria um token CSRF para segurança
 function csrf_token() {
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
