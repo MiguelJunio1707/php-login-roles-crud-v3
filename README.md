@@ -1,6 +1,6 @@
-# PHP Login with Roles (Admin & User)
+# Login com PHP
 
-Sistema simples e didático para aulas: PHP + MySQL + Bootstrap.
+Esqueleto para projeto alunos 2025.2
 
 ## Requisitos
 - PHP 8+ (XAMPP ou similar)
@@ -39,12 +39,10 @@ php-login-roles/
    └─ footer.php
 ```
 
-## Notas didáticas
+## Notas importantes!
 - Usa `password_hash()` e `password_verify()`.
 - Sessões PHP para manter o usuário logado. //Aula a ser ministrada no dia 9/9
 - Redirecionamento por perfil (Admin → `admin.php`, User → `user.php`).
-
-
 
 ## CRUD para Admin
 - **Criar usuário**: `users_create.php`
@@ -52,9 +50,9 @@ php-login-roles/
 - **Excluir usuário**: `users_delete.php` (POST + CSRF)
 - Protegido por `ensure_admin()` em `helpers.php`.
 
-### Segurança didática aplicada
+### Segurança de código aplicada
 - `password_hash()` / `password_verify()`
-- **CSRF token** em formulários sensíveis
+- **CSRF token** em formulários sensíveis (Estudem esse assunto que vou perguntar na hora da apresentação)
 - Validação e tratamento de erros (e-mail único, senha mínima)
 - Bloqueio para excluir o próprio usuário logado
 

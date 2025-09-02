@@ -36,7 +36,7 @@ function flash_set($type, $msg) {
 
 /**
  * Aqui meus amigos traz o toasts Bootstrap a partir de flash_set().
- * Depende de showToast() definido em partials/footer.php.
+ * Depende de showToast() "Função no arquivo" partials/footer.php.
  */
 function flash_show() {
     if (!empty($_SESSION['flash'])) {
