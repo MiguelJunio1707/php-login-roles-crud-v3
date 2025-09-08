@@ -21,14 +21,15 @@ if (isset($_SESSION['user_id'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-light d-flex align-items-center" style="min-height:100vh;">
+<body class="bg-success d-flex align-items-center imagemfisio" style="min-height:100vh; background-image: url('Agendamento de Fisioterapia com Conforto.png' ">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-md-4">
         <div class="card shadow-sm">
           <div class="card-body p-4">
-            <h1 class="h4 mb-3 text-center">Nosso querido Sistema 2025.2</h1>
+            <h1 class="h4 mb-3 text-center">Fisiovida</h1>
             <?php if (!empty($_GET['error'])): ?>
               <div class="alert alert-danger py-2"><?php echo htmlspecialchars($_GET['error']); ?></div>
             <?php endif; ?>
