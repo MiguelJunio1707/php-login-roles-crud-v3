@@ -1,35 +1,44 @@
 <?php
-
 session_start();
-require __DIR__ . '/config/db.php';
+require __DIR__ . '/config/db.php'; // conecta com Fisiovida
+require_once __DIR__ . '/helpers.php'; // flash_set()
 
-$email = $_POST['email'] ?? '';
-$password = $_POST['password'] ?? '';
+$email = trim($_POST['email'] ?? '');
+$password = trim($_POST['password'] ?? '');
 
 if (!$email || !$password) {
-  header('Location: index.php?error=Preencha e-mail e senha.');
-  exit;
+    flash_set('danger', 'Preencha e-mail e senha.');
+    header('Location: index.php');
+    exit;
 }
 
-$stmt = $pdo->prepare('SELECT id, first_name, last_name, email, password_hash, role FROM users WHERE email = ? LIMIT 1');
+// Busca o usuário no banco
+$sql = "SELECT id, nome, email, senha, tipo_usuario 
+        FROM usuario 
+        WHERE email = ? 
+        LIMIT 1";
+$stmt = $conn->prepare($sql); // $conn vem do db.php
 $stmt->execute([$email]);
-$user = $stmt->fetch();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($user && password_verify($password, $user['password_hash'])) {
-  // Guarda o essencial na sessão
-  $_SESSION['user_id'] = $user['id'];
-  $_SESSION['first_name'] = $user['first_name'];
-  $_SESSION['last_name'] = $user['last_name'];
-  $_SESSION['email'] = $user['email'];
-  $_SESSION['role'] = $user['role'];
+if ($user && password_verify($password, $user['senha'])) {
+    // Guarda na sessão
+    $_SESSION['user_id']    = $user['id'];
+    $_SESSION['first_name'] = $user['nome'];
+    $_SESSION['email']      = $user['email'];
+    $_SESSION['role']       = $user['tipo_usuario']; // 'admin' ou 'paciente'
 
-  if ($user['role'] === 'admin') {
-    header('Location: admin.php');
-  } else {
-    header('Location: user.php');
-  }
-  exit;
+    flash_set('success', 'Login realizado com sucesso!');
+
+    if ($user['tipo_usuario'] === 'admin') {
+        header('Location: admin.php');
+    } else {
+        header('Location: usuario.php');
+    }
+    exit;
 }
 
-header('Location: index.php?error=Credenciais inválidas.');
+// Se falhar
+flash_set('danger', 'E-mail ou senha inválidos.');
+header('Location: index.php');
 exit;

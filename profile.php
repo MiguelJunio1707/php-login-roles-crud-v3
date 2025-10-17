@@ -5,7 +5,8 @@ require __DIR__ . '/helpers.php';
 
 $userId = (int)$_SESSION['user_id'];
 
-$stmt = $pdo->prepare('SELECT id, first_name, last_name, email FROM users WHERE id=?');
+// Busca usuário na tabela "usuario"
+$stmt = $pdo->prepare('SELECT id, nome, email, tipo_usuario FROM usuario WHERE id=?');
 $stmt->execute([$userId]);
 $user = $stmt->fetch();
 if (!$user) {
@@ -17,14 +18,12 @@ $success = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   csrf_check();
-  $first_name = trim($_POST['first_name'] ?? '');
-  $last_name  = trim($_POST['last_name'] ?? '');
-  $email      = trim($_POST['email'] ?? '');
-  $password   = $_POST['password'] ?? '';
-  $password2  = $_POST['password2'] ?? '';
+  $nome      = trim($_POST['first_name'] ?? '');
+  $email     = trim($_POST['email'] ?? '');
+  $password  = $_POST['password'] ?? '';
+  $password2 = $_POST['password2'] ?? '';
 
-  if ($first_name === '') $errors[] = 'Primeiro nome é obrigatório.';
-  if ($last_name === '')  $errors[] = 'Sobrenome é obrigatório.';
+  if ($nome === '') $errors[] = 'Nome é obrigatório.';
   if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'E-mail inválido.';
 
   if ($password !== '' || $password2 !== '') {
@@ -34,21 +33,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if (!$errors) {
     // verificar duplicidade de e-mail
-    $chk = $pdo->prepare('SELECT id FROM users WHERE email=? AND id<>?');
+    $chk = $pdo->prepare('SELECT id FROM usuario WHERE email=? AND id<>?');
     $chk->execute([$email, $userId]);
     if ($chk->fetch()) {
       $errors[] = 'Já existe um usuário com este e-mail.';
     } else {
       if ($password) {
-        $stmt = $pdo->prepare('UPDATE users SET first_name=?, last_name=?, email=?, password_hash=? WHERE id=?');
-        $stmt->execute([$first_name, $last_name, $email, password_hash($password, PASSWORD_DEFAULT), $userId]);
+        $stmt = $pdo->prepare('UPDATE usuario SET nome=?, email=?, senha=? WHERE id=?');
+        $stmt->execute([$nome, $email, password_hash($password, PASSWORD_DEFAULT), $userId]);
       } else {
-        $stmt = $pdo->prepare('UPDATE users SET first_name=?, last_name=?, email=? WHERE id=?');
-        $stmt->execute([$first_name, $last_name, $email, $userId]);
+        $stmt = $pdo->prepare('UPDATE usuario SET nome=?, email=? WHERE id=?');
+        $stmt->execute([$nome, $email, $userId]);
       }
+
       // Atualiza sessão
-      $_SESSION['first_name'] = $first_name;
-      $_SESSION['last_name']  = $last_name;
+      $_SESSION['first_name'] = $nome;
       $_SESSION['email']      = $email;
       flash_set('success', 'Perfil atualizado com sucesso.');
       header('Location: profile.php');
@@ -62,7 +61,7 @@ flash_show();
 ?>
 <div class="d-flex align-items-center justify-content-between mb-3">
   <h2 class="h4 mb-0">Meu Perfil</h2>
-  <a class="btn btn-outline-secondary btn-sm" href="<?php echo $_SESSION['role']==='admin' ? 'admin.php' : 'user.php'; ?>">Voltar</a>
+  <a class="btn btn-outline-secondary btn-sm" href="<?php echo $_SESSION['tipo_usuario']==='admin' ? 'admin.php' : 'user.php'; ?>">Voltar</a>
 </div>
 
 <?php if ($errors): ?>
@@ -77,12 +76,8 @@ flash_show();
   <?php csrf_input(); ?>
   <div class="row g-3">
     <div class="col-md-6">
-      <label class="form-label">Primeiro Nome</label>
-      <input type="text" name="first_name" class="form-control" value="<?php echo htmlspecialchars($user['first_name']); ?>" required>
-    </div>
-    <div class="col-md-6">
-      <label class="form-label">Sobrenome</label>
-      <input type="text" name="last_name" class="form-control" value="<?php echo htmlspecialchars($user['last_name']); ?>" required>
+      <label class="form-label">Nome</label>
+      <input type="text" name="first_name" class="form-control" value="<?php echo htmlspecialchars($user['nome']); ?>" required>
     </div>
     <div class="col-md-6">
       <label class="form-label">E-mail</label>

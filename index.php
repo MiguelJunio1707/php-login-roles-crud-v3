@@ -2,17 +2,18 @@
 
 session_start();
 if (isset($_SESSION['user_id'])) {
-  // Depois que fez o login → redireciona conforme perfil
-  if ($_SESSION['role'] === 'admin') {
-    //Se admin
+  // Depois que fez o login → redireciona conforme o tipo de usuário
+  if ($_SESSION['tipo_usuario'] === 'admin') {
+    // Se admin
     header('Location: admin.php');
     exit;
   } else {
-    //Se usuário normal
-    header('Location: user.php');
+    // Se paciente ou fisioterapeuta
+    header('Location: usuario.php');
     exit;
   }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">

@@ -3,14 +3,20 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-//Se o usuário estiver logado com um perfil de admin
+
+// Se o usuário estiver logado com um perfil de admin
 function ensure_admin() {
-    if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
+    // Compatível com o banco fisiovida
+    $tipo = $_SESSION['tipo_usuario'] ?? $_SESSION['role'] ?? null;
+    $id   = $_SESSION['id'] ?? $_SESSION['user_id'] ?? null;
+
+    if (!$id || $tipo !== 'admin') {
         header('Location: index.php?error=Acesso negado.');
         exit;
     }
 }
-//Essa aqui é uma função que cria um token CSRF para segurança
+
+// Essa aqui é uma função que cria um token CSRF para segurança
 function csrf_token() {
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -47,7 +53,6 @@ function flash_show() {
             [['type' => $type, 'msg' => $msg]],
             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
         );
-        //Vamos falar disso em sala de aula
         // Injeta JSON + JS que chama showToast() no carregamento
         echo '<script id="flashToastsScript" type="application/json">'.$payload.'</script>';
         echo '<script>
